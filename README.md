@@ -11,7 +11,7 @@ Para correr este programa localmente debe tener instaladas las siguientes herram
 
 1. [NodeJS](https://nodejs.org/)
 2. [Yarn](https://yarnpkg.com/) o npm
-3. [Postgresql](http://postgresql.org/)
+
 
 Debe ingresar tanto a la carpeta de backend como de frontend e instalar las dependencias de cada una.
 
