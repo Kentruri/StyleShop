@@ -1,10 +1,10 @@
 
 import {BrowserRouter, Switch,Route} from 'react-router-dom'
 import Homepage from './pages/Homepage'
-import GlobalStyle from './globalStyles';
-import Navbar from './components/Navbar';
-import Register from './pages/Register'
-import Login from './pages/Login'
+import GlobalStyle from './globalStyles'
+import Navbar from './components/Navbar'
+import Register from './pages/Form/Register'
+import Login from './pages/Form/Login'
 
 function App() {
   return (
