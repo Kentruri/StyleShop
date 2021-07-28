@@ -114,6 +114,7 @@ export const Suggestion = styled.div`
   color: #666666;
 `
 
+
 export const ForgotPassword = styled(Link)`
  text-decoration:none;
  margin: -5px 0 30px 5px;
@@ -124,3 +125,4 @@ export const ForgotPassword = styled(Link)`
     text-decoration: underline;
   }
 `
+
