@@ -96,6 +96,7 @@ export const Btn = styled.button`
   cursor: pointer;
   outline: none;
   margin-top:10px;
+  margin-bottom: 10px;
 `
 
 export const P = styled(Link)`
@@ -118,11 +119,12 @@ export const Suggestion = styled.div`
 export const ForgotPassword = styled(Link)`
  text-decoration:none;
  margin: -5px 0 30px 5px;
-  color: #a6a6a6;
+  color: #bb1111;
   cursor: pointer;
 
   &:hover{
     text-decoration: underline;
+    color: #000;
   }
 `
 

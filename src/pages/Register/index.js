@@ -1,6 +1,5 @@
 import React from 'react'
-import styled from 'styled-components'
-import Register from '../../components/Form/Register'
+import Register from '../../components/Authentication/Register'
 
 
 const SignUp = () => {

@@ -1,84 +1,110 @@
 
-import React,{Component} from 'react'
-import {BrowserRouter, Switch,Route,Redirect} from 'react-router-dom'
+import React, { useEffect } from 'react'
+import { Switch, Route, Redirect } from 'react-router-dom'
 import Homepage from './pages/Homepage'
 import GlobalStyle from './globalStyles'
-
+import { setCurrentUser } from './redux/User/user.actions'
+import { connect } from 'react-redux'
 import SignUp from './pages/Register'
 import SignIn from './pages/Login'
-import { auth,handleUserProfile } from './firebase/Utils'
+import { auth, handleUserProfile } from './firebase/Utils'
 import MainLayout from './components/mainLayout'
+import RecoverPassword from './pages/RecoverPassword'
+import WithAuth  from './hoc/withAuth'
+import Dashboard from './pages/Dashboard'
 
-const initialState = {
-  currentUser: null
-}
 
-class App extends Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      ...initialState
-    };
-  }
-   authListener =  null; 
+const App = props => {
 
-   componentDidMount() {
-     this.authListener = auth.onAuthStateChanged(async userAuth => {
-      if(userAuth) {
-        const userRef = await handleUserProfile(userAuth)
+  const { currentUser, setCurrentUser } = props;
+  useEffect(() => {
+
+
+
+    const authListener = auth.onAuthStateChanged(async userAuth => {
+      if (userAuth) {
+        const userRef = await handleUserProfile(userAuth);
         userRef.onSnapshot(snapshot => {
-          this.setState({
-            currentUser: {
-              id:snapshot.id,
-              ...snapshot.data()
-            }
-          })
+          console.log(snapshot.data())
+          setCurrentUser({
+            id: snapshot.id,
+            ...snapshot.data()
+          });
         })
       }
-      this.setState({
-        ...initialState
-      })
 
-     });
-   }
+      setCurrentUser(userAuth);
+    });
 
-   componentWillUnmount(){
-     this.authListener();
-   }
+    return () => {
+      authListener();
+    }
 
-   render() {
-    const { currentUser } = this.state;
-    return (
-      <BrowserRouter>
-      <GlobalStyle/>
-     
-        <Switch>
-          <Route exact path="/" render={() => (
-            <MainLayout currentUser={currentUser}>
-                 <Homepage />
+  }, [])
+
+
+  return (
+    <div className="app">
+      <GlobalStyle />
+
+      <Switch>
+        <Route exact path="/" render={() => (
+          <MainLayout >
+            <Homepage />
+          </MainLayout>
+
+        )} />
+        <Route path="/Register"
+          render={() =>(
+            <MainLayout >
+              <SignUp />
             </MainLayout>
-         
+
           )} />
-          <Route path ="/Register"  
-          render={() => currentUser ? <Redirect to="/"/> : (
-            <MainLayout currentUser={currentUser}>
-                 <SignUp />
+        <Route path="/Login"
+          render={() =>(
+            <MainLayout >
+              <SignIn />
             </MainLayout>
-         
+
           )} />
-          <Route path ="/Login"  
-          render={() => currentUser ? <Redirect to="/"/> : (
-            <MainLayout currentUser={currentUser}>
-                 <SignIn />
+
+        <Route path="/Recover"
+          render={() => (
+            <MainLayout >
+              <RecoverPassword />
             </MainLayout>
-         
+
           )} />
-        </Switch>
-      </BrowserRouter>
-    );
-   }
-  
+
+        <Route path="/Dashboard" render={() => (
+          <WithAuth>
+            <MainLayout>
+              <Dashboard />
+            </MainLayout>
+          </WithAuth>
+        )} />
+
+
+      </Switch>
+    </div>
+  );
 }
 
-export default App;
+
+
+//user es el reducer, currentUser es parte del estado inicial, y comenzara en null
+const mapStateToProps = ({ user }) => ({
+  currentUser: user.currentUser 
+});
+
+//comnenzamos con el currentUser seteado en null
+
+const mapDispatchToProps = dispatch => ({
+  setCurrentUser: (user) => {
+    dispatch(setCurrentUser(user))
+  }
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

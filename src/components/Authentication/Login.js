@@ -1,14 +1,14 @@
 import React,{useState} from 'react'
-import './formElements'
-import { Title, WrapperCenter, Form, WrapperInput, Input, Span, Btn, Suggestion,ForgotPassword, P, Label } from './formElements'
+
+import { Title, WrapperCenter, Form, WrapperInput, Input, Span, Btn, Suggestion,ForgotPassword, P, Label } from './FormElements.js'
 import {signInWithGoogle} from "../../firebase/Utils"
 import { auth} from '../../firebase/Utils'
-
+import {withRouter } from 'react-router-dom';
 import { useForm } from "react-hook-form";
 
 
 
-const Login = () => {
+const Login = props => {
 
     const [errors,setErrors] = useState([])
     const { register, handleSubmit } = useForm();
@@ -16,6 +16,7 @@ const Login = () => {
         try {
 
             await auth.signInWithEmailAndPassword(data.Email, data.Password);
+            props.history.push('/');
       
           } catch (error) {
             
@@ -40,7 +41,7 @@ const Login = () => {
                     <Label>Password</Label>
                 </WrapperInput>
 
-                <ForgotPassword>Forgot password?</ForgotPassword>
+                <ForgotPassword to="/Recover">Forgot password?</ForgotPassword>
                 {errors.length > 0 && (
                     <ul>
                         {errors.map((err, index) => {
@@ -61,4 +62,4 @@ const Login = () => {
     )
 }
 
-export default Login
+export default withRouter(Login);

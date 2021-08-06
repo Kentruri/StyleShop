@@ -1,18 +1,20 @@
 import React,{useState} from 'react'
-import './formElements'
-import { Title, WrapperCenter, Form, WrapperInput, Input, Span, Btn, Suggestion, P, Label } from './formElements'
+import { withRouter } from 'react-router-dom';
+import { Title, WrapperCenter, Form, WrapperInput, Input, Span, Btn, Suggestion, P, Label } from './FormElements.js'
 import { useForm } from "react-hook-form";
 import {auth,handleUserProfile} from '../../firebase/Utils'
 
-const Register = () => {
+const Register = props => {
+    
     const { register, handleSubmit } = useForm();
     const [errors,setErrors] = useState([])
+    
     const onSubmit = async data => {
         console.log(data)
 
         const {displayName,Email,Password,RPassword} = data
 
-        if(Password != RPassword){
+        if(Password !== RPassword){
             const err = ['Password Don\'t match'];
             setErrors(err)
             return;
@@ -25,6 +27,7 @@ const Register = () => {
             const {user} = await auth.createUserWithEmailAndPassword(Email,Password);
             console.log(user)
             await handleUserProfile(user,{displayName});
+            props.history.push('/');
 
         }
         catch(error){
@@ -82,4 +85,4 @@ const Register = () => {
     )
 }
 
-export default Register
+export default withRouter(Register);
